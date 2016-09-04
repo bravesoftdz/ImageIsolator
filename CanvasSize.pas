@@ -1,9 +1,12 @@
 unit CanvasSize;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics,
+  Controls, Forms, Dialogs,
   StdCtrls, ComCtrls, Spin;
 
 type
@@ -23,19 +26,21 @@ type
 var
   frmCanvasSize: TfrmCanvasSize;
 
-function GetNewCanvasSize(var AWidth, AHeight: Integer): Boolean;
+function GetNewCanvasSize(var AWidth, AHeight: integer): boolean;
 
 implementation
 
-{$R *.DFM}
+{$R *.lfm}
 
-function GetNewCanvasSize(var AWidth, AHeight: Integer): Boolean;
+function GetNewCanvasSize(var AWidth, AHeight: integer): boolean;
 begin
-  with frmCanvasSize do begin
+  with frmCanvasSize do
+  begin
     txtWidth.Value := AWidth;
     txtHeight.Value := AHeight;
     Result := ShowModal = mrOk;
-    if Result then begin
+    if Result then
+    begin
       AWidth := txtWidth.Value;
       AHeight := txtHeight.Value;
     end;

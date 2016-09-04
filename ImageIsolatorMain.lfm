@@ -1,0 +1,150 @@
+object MainForm: TMainForm
+  Left = 168
+  Top = 108
+  Width = 596
+  Height = 449
+  Caption = 'Απομόνωση εικόνας'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Menu = MainMenu1
+  PixelsPerInch = 96
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 57
+    Height = 403
+    Align = alLeft
+    BevelOuter = bvNone
+    BorderStyle = bsSingle
+    TabOrder = 0
+    object BGColor: TShape
+      Left = 15
+      Top = 14
+      Width = 24
+      Height = 24
+    end
+    object Label1: TLabel
+      Left = 7
+      Top = 38
+      Width = 38
+      Height = 26
+      Alignment = taCenter
+      Caption = 'Χρώμα φόντου'
+      WordWrap = True
+    end
+    object CurrColor: TShape
+      Left = 15
+      Top = 70
+      Width = 24
+      Height = 24
+    end
+    object Label2: TLabel
+      Left = 7
+      Top = 94
+      Width = 36
+      Height = 26
+      Alignment = taCenter
+      Caption = 'Τρέχον χρώμα'
+      WordWrap = True
+    end
+  end
+  object ScrollBox1: TScrollBox
+    Left = 57
+    Top = 0
+    Width = 531
+    Height = 403
+    Align = alClient
+    TabOrder = 1
+    object Image1: TImage
+      Left = 0
+      Top = 0
+      Width = 105
+      Height = 105
+      OnMouseMove = Image1MouseMove
+      OnMouseUp = Image1MouseUp
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 384
+    Top = 8
+    object EditMenu: TMenuItem
+      Caption = '&Επεξεργασία'
+      object EditUndo: TMenuItem
+        Caption = 'Αναίρεση'
+        OnClick = EditUndoClick
+      end
+      object EditRedo: TMenuItem
+        Caption = 'Επανάληψη'
+        OnClick = EditRedoClick
+      end
+      object EditCut: TMenuItem
+        Caption = 'Αποκοπή'
+        OnClick = EditCutClick
+      end
+      object EditCopy: TMenuItem
+        Caption = 'Αντιγραφή'
+        OnClick = EditCopyClick
+      end
+      object EditCopyToFile: TMenuItem
+        Caption = 'Αντιγραφή σε αρχείο...'
+        OnClick = EditCopyToFileClick
+      end
+      object EditPaste: TMenuItem
+        Caption = 'Επικόλληση'
+        OnClick = EditPasteClick
+      end
+      object EditPasteFromFile: TMenuItem
+        Caption = 'Επικόλληση από αρχείο...'
+        OnClick = EditPasteFromFileClick
+      end
+      object EditCapture: TMenuItem
+        Caption = 'Λήψη από την οθόνη...'
+        OnClick = EditCaptureClick
+      end
+    end
+    object ActionsMenu: TMenuItem
+      Caption = 'Ενέργειες'
+      object ActionIsolate: TMenuItem
+        Caption = 'Απομόνωση'
+        OnClick = ActionIsolateClick
+      end
+      object ActionAlign: TMenuItem
+        Caption = 'Στοίχιση'
+        OnClick = ActionAlignClick
+      end
+      object ActionTile: TMenuItem
+        Caption = 'Παράθεση'
+        OnClick = ActionTileClick
+      end
+    end
+    object mnuOptions: TMenuItem
+      Caption = 'Επιλογές'
+      object OptionsCapturing: TMenuItem
+        Caption = 'Προσαρμογή λήψης εικόνας...'
+      end
+      object OptionBGColor: TMenuItem
+        Caption = 'Χρώμα φόντου...'
+        OnClick = OptionBGColorClick
+      end
+    end
+  end
+  object ColorDialog1: TColorDialog
+    Color = clWhite
+    Left = 480
+    Top = 8
+  end
+  object OpenPictureDialog1: TOpenPictureDialog
+    Filter = 'All (*.bmp;*.ico;*.emf;*.wmf)|*.bmp;*.ico;*.emf;*.wmf|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Metafiles (*.wmf)|*.wmf'
+    Left = 416
+    Top = 8
+  end
+  object SavePictureDialog1: TSavePictureDialog
+    Filter = 'All (*.bmp;*.ico;*.emf;*.wmf)|*.bmp;*.ico;*.emf;*.wmf|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico|Enhanced Metafiles (*.emf)|*.emf|Metafiles (*.wmf)|*.wmf'
+    Left = 448
+    Top = 8
+  end
+end

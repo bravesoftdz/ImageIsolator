@@ -1,10 +1,13 @@
 unit ImageIsolatorMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ClipBrd, ExtCtrls, Buttons, ExtDlgs, Menus, JPEG, StdCtrls, ComCtrls,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics,
+  Controls, Forms, Dialogs,
+  ClipBrd, ExtCtrls, Buttons, ExtDlgs, Menus, StdCtrls, ComCtrls,
   ToolWin;
 
 const
@@ -40,10 +43,9 @@ type
     EditPasteFromFile: TMenuItem;
     EditCapture: TMenuItem;
     procedure OptionBGColorClick(Sender: TObject);
-    procedure Image1MouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure Image1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
     procedure Image1MouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; X, Y: integer);
     procedure ActionIsolateClick(Sender: TObject);
     procedure ActionAlignClick(Sender: TObject);
     procedure ActionTileClick(Sender: TObject);
@@ -70,13 +72,14 @@ implementation
 
 uses frmAreaCapture, ScrnCap, CanvasSize;
 
-{$R *.DFM}
+{$R *.lfm}
 
 procedure TMainForm.AssignBitmap(b: TBitmap);
 begin
-  with ScrollBox1 do begin
-    HorzScrollBar.Range :=b.Width;
-    VertScrollBar.Range :=b.Height;
+  with ScrollBox1 do
+  begin
+    HorzScrollBar.Range := b.Width;
+    VertScrollBar.Range := b.Height;
   end;
   Image1.SetBounds(0, 0, b.Width, b.Height);
   Image1.Picture.Assign(b);
@@ -84,9 +87,10 @@ end;
 
 procedure TMainForm.AssignPicture(b: TPicture);
 begin
-  with ScrollBox1 do begin
-    HorzScrollBar.Range :=b.Width;
-    VertScrollBar.Range :=b.Height;
+  with ScrollBox1 do
+  begin
+    HorzScrollBar.Range := b.Width;
+    VertScrollBar.Range := b.Height;
   end;
   Image1.SetBounds(0, 0, b.Width, b.Height);
   Image1.Picture.Assign(b);
@@ -98,9 +102,11 @@ var
 begin
   with TAreaCapturer.Create(Application) do
     try
-      if ShowModal = mrOK then
-        with fRect do begin
-          if (Right > Left) and (Bottom > Top) then begin
+      if ShowModal = mrOk then
+        with fRect do
+        begin
+          if (Right > Left) and (Bottom > Top) then
+          begin
             Sleep(DelayTime div 2);
             ABitmap := TBitmap.Create;
             ABitmap.Assign(CaptureScreenRect(fRect));
@@ -115,116 +121,121 @@ end;
 
 procedure TMainForm.OptionBGColorClick(Sender: TObject);
 begin
-  if ColorDialog1.Execute then BGColor.Brush.Color:=ColorDialog1.Color;
+  if ColorDialog1.Execute then
+    BGColor.Brush.Color := ColorDialog1.Color;
 end;
 
-procedure TMainForm.Image1MouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
+procedure TMainForm.Image1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
 begin
-  CurrColor.Brush.Color:= Image1.Picture.Bitmap.Canvas.Pixels[x, y];
+  CurrColor.Brush.Color := Image1.Picture.Bitmap.Canvas.Pixels[x, y];
 end;
 
 procedure TMainForm.Image1MouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+  Shift: TShiftState; X, Y: integer);
 begin
-  BGColor.Brush.Color:= Image1.Picture.Bitmap.Canvas.Pixels[x, y];
+  BGColor.Brush.Color := Image1.Picture.Bitmap.Canvas.Pixels[x, y];
 end;
 
 procedure TMainForm.ActionIsolateClick(Sender: TObject);
 var
   R, Q: TRect;
-  x, y: Integer;
-  Found: Boolean;
+  x, y: integer;
+  Found: boolean;
   b: TBitmap;
 begin
   { search for left side }
-  Found:=False;
-  x:=0;
+  Found := False;
+  x := 0;
   repeat
-    y:=0;
+    y := 0;
     repeat
       if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
-        Found:=True
+        Found := True
       else
-        y:=y+1;
-    until Found or (y>=Image1.Picture.Height);
-    if not Found then x:=x+1;
-  until Found or (x>=Image1.Picture.Width);
+        y := y + 1;
+    until Found or (y >= Image1.Picture.Height);
+    if not Found then
+      x := x + 1;
+  until Found or (x >= Image1.Picture.Width);
   if not Found then
-    MessageDlg('Η εικόνα είναι κενή...', mtError, [mbOk], 0)
+    MessageDlg('Ξ— ΞµΞΉΞΊΟΞ½Ξ± ΞµΞ―Ξ½Ξ±ΞΉ ΞΊΞµΞ½Ξ®...', mtError, [mbOK], 0)
   else
-    begin
-      R.Left:=x;
+  begin
+    R.Left := x;
 
-      { search for top side }
-      Found:=False;
-      y:=0;
+    { search for top side }
+    Found := False;
+    y := 0;
+    repeat
+      x := 0;
       repeat
-        x:=0;
-        repeat
-          if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
-            Found:=True
-          else
-            x:=x+1;
-        until Found or (x>=Image1.Picture.Width);
-        if not Found then y:=y+1;
-      until Found or (y>=Image1.Picture.Height);
-      R.Top:=y;
+        if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
+          Found := True
+        else
+          x := x + 1;
+      until Found or (x >= Image1.Picture.Width);
+      if not Found then
+        y := y + 1;
+    until Found or (y >= Image1.Picture.Height);
+    R.Top := y;
 
-      { search for right side }
-      Found:=False;
-      x:=Image1.Width - 1;
+    { search for right side }
+    Found := False;
+    x := Image1.Width - 1;
+    repeat
+      y := 0;
       repeat
-        y:=0;
-        repeat
-          if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
-            Found:=True
-          else
-            y:=y+1;
-        until Found or (y>=Image1.Picture.Height);
-        if not Found then x:=x-1;
-      until Found or (x<0);
-      R.Right:=x+1;
+        if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
+          Found := True
+        else
+          y := y + 1;
+      until Found or (y >= Image1.Picture.Height);
+      if not Found then
+        x := x - 1;
+    until Found or (x < 0);
+    R.Right := x + 1;
 
-      { search for bottom side }
-      Found:=False;
-      y:=Image1.Height-1;
+    { search for bottom side }
+    Found := False;
+    y := Image1.Height - 1;
+    repeat
+      x := 0;
       repeat
-        x:=0;
-        repeat
-          if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
-            Found:=True
-          else
-            x:=x+1;
-        until Found or (x>=Image1.Picture.Width);
-        if not Found then y:=y-1;
-      until Found or (y<0);
-      R.Bottom:=y+1;
-      Q:=Rect(0, 0, R.Right-R.Left, R.Bottom-R.Top);
-      b:=TBitmap.Create;
-      b.Width:=Q.Right;
-      b.Height:=Q.Bottom;
-      b.Canvas.CopyRect(Q, Image1.Picture.Bitmap.Canvas, R);
-      AssignBitmap(b);
+        if Image1.Canvas.Pixels[x, y] <> BGColor.Brush.Color then
+          Found := True
+        else
+          x := x + 1;
+      until Found or (x >= Image1.Picture.Width);
+      if not Found then
+        y := y - 1;
+    until Found or (y < 0);
+    R.Bottom := y + 1;
+    Q := Rect(0, 0, R.Right - R.Left, R.Bottom - R.Top);
+    b := TBitmap.Create;
+    b.Width := Q.Right;
+    b.Height := Q.Bottom;
+    b.Canvas.CopyRect(Q, Image1.Picture.Bitmap.Canvas, R);
+    AssignBitmap(b);
 {      ScrollBox2.VertScrollBar.Position :=0;
       ScrollBox2.HorzScrollBar.Position :=0;
 
       Image2.SetBounds(0, 0, Q.Right, Q.Bottom);
       Image2.Picture.Assign(b);}
-      b.Free;
-    end;
+    b.Free;
+  end;
 end;
 
 procedure TMainForm.ActionAlignClick(Sender: TObject);
 var
-  w, h: Integer;
+  w, h: integer;
   b: TBitmap;
   R1: TRect;
   R2: TRect;
 begin
   w := Image1.Width;
   h := Image1.Height;
-  if GetNewCanvasSize(w, h) then begin
+  if GetNewCanvasSize(w, h) then
+  begin
     b := TBitmap.Create;
     b.Width := w;
     b.Height := h;
@@ -232,7 +243,7 @@ begin
     b.Canvas.FillRect(Bounds(0, 0, w, h));
     R2 := Bounds(0, 0, Image1.Width, Image1.Height);
     R1 := Rect((w - Image1.Width) div 2, (h - Image1.Height) div 2,
-    (w + Image1.Width) div 2, (h + Image1.Height) div 2);
+      (w + Image1.Width) div 2, (h + Image1.Height) div 2);
     b.Canvas.CopyRect(R1, Image1.Canvas, R2);
     AssignBitmap(b);
     b.Free;
@@ -241,14 +252,15 @@ end;
 
 procedure TMainForm.ActionTileClick(Sender: TObject);
 var
-  w, h: Integer;
+  w, h: integer;
   b: TBitmap;
   R1: TRect;
   R2: TRect;
 begin
   w := Image1.Width;
   h := Image1.Height;
-  if GetNewCanvasSize(w, h) then begin
+  if GetNewCanvasSize(w, h) then
+  begin
     b := TBitmap.Create;
     b.Width := w;
     b.Height := h;
@@ -260,7 +272,7 @@ begin
         R1.Left := R1.Left + Image1.Width;
         R1.Right := R1.Left + Image1.Width;
       until R1.Left > w;
-      R1 := Rect(0, R1.Top+Image1.Height, Image1.Width, R1.Bottom+Image1.Height);
+      R1 := Rect(0, R1.Top + Image1.Height, Image1.Width, R1.Bottom + Image1.Height);
     until R1.Top > h;
     AssignBitmap(b);
     b.Free;
@@ -269,17 +281,17 @@ end;
 
 procedure TMainForm.EditUndoClick(Sender: TObject);
 begin
-//
+
 end;
 
 procedure TMainForm.EditRedoClick(Sender: TObject);
 begin
-//
+
 end;
 
 procedure TMainForm.EditCutClick(Sender: TObject);
 begin
-//
+
 end;
 
 procedure TMainForm.EditCopyClick(Sender: TObject);
@@ -298,8 +310,9 @@ procedure TMainForm.EditPasteClick(Sender: TObject);
 var
   bmp1: TBitmap;
 begin
-  if Clipboard.HasFormat(CF_BITMAP) then begin
-    bmp1:=TBitmap.Create;
+  if Clipboard.HasFormat(CF_BITMAP) then
+  begin
+    bmp1 := TBitmap.Create;
     try
       bmp1.Assign(Clipboard);
       AssignBitmap(bmp1);
@@ -314,8 +327,9 @@ var
   p1: TPicture;
 begin
   with OpenPictureDialog1 do
-    if Execute then begin
-      p1:=TPicture.Create;
+    if Execute then
+    begin
+      p1 := TPicture.Create;
       try
         p1.LoadFromFile(FileName);
         AssignPicture(p1);
@@ -327,10 +341,10 @@ end;
 
 procedure TMainForm.EditCaptureClick(Sender: TObject);
 begin
-   Application.Minimize;
-   Sleep(DelayTime div 2);
-   CaptureArea;
-   Application.Restore;
+  Application.Minimize;
+  Sleep(DelayTime div 2);
+  CaptureArea;
+  Application.Restore;
 end;
 
 end.
