@@ -310,7 +310,7 @@ procedure TMainForm.EditPasteClick(Sender: TObject);
 var
   bmp1: TBitmap;
 begin
-  if Clipboard.HasFormat(CF_BITMAP) then
+  if Clipboard.HasPictureFormat then
   begin
     bmp1 := TBitmap.Create;
     try
@@ -319,7 +319,9 @@ begin
     finally
       bmp1.Free;
     end;
-  end;
+  end
+  else
+    MessageDlg('Το πρόχειρο δεν έχει εικόνα', mtError, [mbOk], 0);
 end;
 
 procedure TMainForm.EditPasteFromFileClick(Sender: TObject);
